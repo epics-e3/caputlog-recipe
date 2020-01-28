@@ -12,9 +12,5 @@
 #-                 2   log all puts no filtering on same PV
 #- ####################################################
 
-epicsEnvSet(CAPUTLOG_EPICS_IOC_LOG_INET, "$(LOG_INET)")
-epicsEnvSet(CAPUTLOG_EPICS_IOC_LOG_PORT, "$(LOG_INET_PORT=7004)")
-epicsEnvSet(CAPUTLOG_OPTION, "$(OPTION=0)")
-
 #- require has afterInit function
-afterInit("caPutLogInit $(CAPUTLOG_EPICS_IOC_LOG_INET):$(CAPUTLOG_EPICS_IOC_LOG_PORT) $(CAPUTLOG_OPTION)")
+afterInit("caPutLogInit $(LOG_INET):$(LOG_INET_PORT=7004) $(OPTION=0)")
