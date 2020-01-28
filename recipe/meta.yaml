@@ -1,19 +1,19 @@
-{% set version = "3.6.0" %}
+{% set version = "3.6.0.post1" %}
 
 package:
   name: caputlog
   version: "{{ version }}"
 
 source:
-  - url: https://github.com/epics-modules/caPutLog/archive/R3.6.tar.gz
-    sha256: 5527a87df2e7884b78adbbd248b4d72a64912739a988f259fb03a3cbe3913a05
+  - git_url: https://github.com/epics-modules/caPutLog.git
+    git_rev: b544f92c6efe1df98506b567f3f7e5137965e2a4
   - path: ../src
 
 
 build:
   number: 0
   run_exports:
-    - {{ pin_subpackage('caputlog', max_pin='x.x.x') }}
+    - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
 
 requirements:
   build:
