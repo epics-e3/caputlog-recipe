@@ -1,4 +1,4 @@
-{% set version = "3.6.0.post1" %}
+{% set version = "3.7.0" %}
 
 package:
   name: caputlog
@@ -6,7 +6,7 @@ package:
 
 source:
   - git_url: https://github.com/epics-modules/caPutLog.git
-    git_rev: b544f92c6efe1df98506b567f3f7e5137965e2a4
+    git_rev: 4a219117023ffc19eb92936c827b648a235971d6
   - path: ../src
 
 
