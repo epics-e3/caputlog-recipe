@@ -1,3 +1,4 @@
+# ---
 #- ###               CAPUTLOG iocsh                 ###
 #- ####################################################
 #- >> Mandatory
@@ -13,4 +14,5 @@
 #- ####################################################
 
 #- require has afterInit function
-afterInit("caPutLogInit $(LOG_INET):$(LOG_INET_PORT=7004) $(OPTION=0)")
+afterInit("caPutJsonLogInit $(LOG_INET):$(LOG_INET_PORT=7004) $(OPTION=0)")
+# ...
