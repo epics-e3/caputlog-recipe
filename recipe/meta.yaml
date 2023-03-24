@@ -6,7 +6,7 @@ package:
 
 source:
   - url: https://github.com/epics-modules/caPutLog/archive/refs/tags/R4.0.tar.gz
-  sha256: 6b85137906ed44a1f15358ab32fa9b4c450b37c495c65410606ea660ef4feb4c 
+    sha256: 6b85137906ed44a1f15358ab32fa9b4c450b37c495c65410606ea660ef4feb4c 
   - path: ../src
 
 
