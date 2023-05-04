@@ -11,9 +11,10 @@ source:
 
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
+  skip: True  # [ppc64]
 
 requirements:
   build:
