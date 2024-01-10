@@ -12,7 +12,7 @@ source:
     - patch/fix_json_memory_leak.p0.patch
 
 build:
-  number: 2
+  number: 3
   run_exports:
     - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
 
