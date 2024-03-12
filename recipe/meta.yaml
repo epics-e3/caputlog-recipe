@@ -12,7 +12,7 @@ source:
     - patch/fix_json_memory_leak.p0.patch
 
 build:
-  number: 3
+  number: 4
   run_exports:
     - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
 
@@ -20,12 +20,11 @@ requirements:
   build:
     - make
     - perl
-    - tclx
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
-    - epics-base
-    - require
+    - epics-base 7.0.8
+    - require 5.1
 
 test:
   requires:
