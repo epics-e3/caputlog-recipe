@@ -11,9 +11,10 @@ source:
   - patches:
     - patch/fix_json_memory_leak.p0.patch
     - patch/0001-Add-metadata-information-to-json-output.p0.patch
+    - patch/0002-Fix-pvmonitors-for-waveforms.p0.patch
 
 build:
-  number: 4
+  number: 5
   run_exports:
     - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
 
