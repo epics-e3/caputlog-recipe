@@ -1,0 +1,158 @@
+From 8306c416e4c2b90a892504c2775dd9f63be7dd2b Mon Sep 17 00:00:00 2001
+From: "Lucas A. M. Magalhaes" <lucas.magalhaes@ess.eu>
+Date: Wed, 20 Sep 2023 13:07:28 +0200
+Subject: [PATCH] Add metadata information to json output
+
+The iocLogPrefix solution creates string that is a mixed between plain
+text and json. That is harder to parse and search than just having only
+json.
+This patch adds the caPutJsonLogMetadata command that adds metadata
+to logs so we drop the usage of iocLogPrefix
+---
+ caPutLogApp/caPutJsonLogShellCommands.cpp | 22 +++++++++++++++++
+ caPutLogApp/caPutJsonLogTask.cpp          | 29 +++++++++++++++++++++++
+ caPutLogApp/caPutJsonLogTask.h            | 11 +++++++++
+ 3 files changed, 62 insertions(+)
+
+diff --git caPutLogApp/caPutJsonLogShellCommands.cpp caPutLogApp/caPutJsonLogShellCommands.cpp
+index 1f271e0..64e4da0 100644
+--- caPutLogApp/caPutJsonLogShellCommands.cpp
++++ caPutLogApp/caPutJsonLogShellCommands.cpp
+@@ -14,6 +14,7 @@
+ #include <errlog.h>
+ #include <iocsh.h>
+ #include <epicsExport.h>
++#include <string>
+ 
+ #include "caPutJsonLogTask.h"
+ 
+@@ -76,6 +77,26 @@ extern "C"
+         caPutJsonLogShow(args[0].ival);
+     }
+ 
++    /* Metadata */
++    int caPutJsonLogAddMetadata(char *property, char *value){
++        CaPutJsonLogTask *logger = CaPutJsonLogTask::getInstance();
++        std::string property_str(property);
++        std::string value_str(value);
++        if (logger != NULL) return logger->addMetadata(property_str, value_str);
++        else return -1;
++    }
++    static const iocshArg caPutJsonLogMetadataArg0 = {"property", iocshArgString};
++    static const iocshArg caPutJsonLogMetadataArg1 = {"value", iocshArgString};
++    static const iocshArg *const caPutJsonLogMetadataArgs[] =
++    {
++        &caPutJsonLogMetadataArg0,
++        &caPutJsonLogMetadataArg1
++    };
++    static const iocshFuncDef caPutJsonLogMetadataDef = {"caPutJsonLogMetadata", 2, caPutJsonLogMetadataArgs};
++    static void caPutJsonLogMetadataCall(const iocshArgBuf *args)
++    {
++        caPutJsonLogAddMetadata(args[0].sval, args[1].sval);
++    }
+ 
+     /* Register IOCsh commands */
+     static void caPutJsonLogRegister(void)
+@@ -87,6 +108,7 @@ extern "C"
+         iocshRegister(&caPutjsonLogInitDef,caPutJsonLogInitCall);
+         iocshRegister(&caPutJsonLogReconfDef,caPutJsonLogReconfCall);
+         iocshRegister(&caPutJsonLogShowDef,caPutJsonLogShowCall);
++        iocshRegister(&caPutJsonLogMetadataDef,caPutJsonLogMetadataCall);
+     }
+     epicsExportRegistrar(caPutJsonLogRegister);
+ 
+diff --git caPutLogApp/caPutJsonLogTask.cpp caPutLogApp/caPutJsonLogTask.cpp
+index 31248a1..f1ffac8 100644
+--- caPutLogApp/caPutJsonLogTask.cpp
++++ caPutLogApp/caPutJsonLogTask.cpp
+@@ -13,8 +13,10 @@
+ 
+ // Standard library imports
+ #include <algorithm>
++#include <cstdio>
+ #include <cstdlib>
+ #include <cstring>
++#include <iterator>
+ #include <string>
+ 
+ #ifdef _WIN32
+@@ -115,6 +117,22 @@ caPutJsonLogStatus CaPutJsonLogTask::report(int level)
+     }
+ }
+ 
++caPutJsonLogStatus CaPutJsonLogTask::addMetadata(std::string property, std::string value)
++{
++    std::pair<std::map<std::string, std::string>::iterator, bool> ret;
++    ret = metadata.insert(std::pair<std::string, std::string>(property,value));
++    if ( ret.second == false ) {
++        metadata.erase(property);
++        ret = metadata.insert(std::pair<std::string, std::string>(property,value));
++        if (ret.second == false) {
++            errlogSevPrintf(errlogMinor, "caPutJsonLog: fail to add property %s to json log\n", property.c_str());
++            return caPutJsonLogError;
++        }
++    }
++    errlogSevPrintf(errlogInfo, "caPutJsonLog: add property %s with value %s to json log\n", property.c_str(), value.c_str());
++    return caPutJsonLogSuccess;
++}
++
+ caPutJsonLogStatus CaPutJsonLogTask::initialize(const char* addresslist, caPutJsonLogConfig config)
+ {
+     caPutJsonLogStatus status;
+@@ -438,6 +456,17 @@ caPutJsonLogStatus CaPutJsonLogTask::buildJsonMsg(const VALUE *pold_value, const
+                             reinterpret_cast<const unsigned char *>(pLogData->userid),
+                             strlen(pLogData->userid)));
+ 
++    // Add metadata
++    std::map<std::string, std::string>::iterator meta_it;
++    for(meta_it = metadata.begin(); meta_it != metadata.end(); meta_it++){
++            CALL_YAJL_FUNCTION_AND_CHECK_STATUS(status, yajl_gen_string(handle,
++                            reinterpret_cast<const unsigned char *>(meta_it->first.c_str()),
++                            meta_it->first.length()));
++            CALL_YAJL_FUNCTION_AND_CHECK_STATUS(status, yajl_gen_string(handle,
++                            reinterpret_cast<const unsigned char *>(meta_it->second.c_str()),
++                            meta_it->second.length()));
++    }
++
+     // Add PV name
+     const unsigned char str_pvName[] = "pv";
+     CALL_YAJL_FUNCTION_AND_CHECK_STATUS(status, yajl_gen_string(handle, str_pvName,
+diff --git caPutLogApp/caPutJsonLogTask.h caPutLogApp/caPutJsonLogTask.h
+index 3df4889..f0c82ea 100644
+--- caPutLogApp/caPutJsonLogTask.h
++++ caPutLogApp/caPutJsonLogTask.h
+@@ -21,6 +21,7 @@
+ #include <logClient.h>
+ #include <epicsMessageQueue.h>
+ #include <dbAddr.h>
++#include <map>
+ #include <epicsThread.h>
+ 
+ // Includes from this module
+@@ -142,6 +143,14 @@ public:
+      */
+     caPutJsonLogStatus report(int level);
+ 
++    /**
++     * @brief Add IOC metadata to json output
++     *
++     * @param property JSON property
++     * @param value Value associated with property
++     */
++    caPutJsonLogStatus addMetadata(std::string property, std::string value);
++
+ private:
+ 
+     // Singelton instance of this class.
+@@ -169,6 +178,8 @@ private:
+     DBADDR caPutJsonLogPV;
+     DBADDR *pCaPutJsonLogPV;
+ 
++    // IOC metadata
++    std::map<std::string, std::string> metadata;
+ 
+     // Class methods (Do not allow public constructors - class is designed as singleton)
+     CaPutJsonLogTask();
+-- 
+2.42.0
+

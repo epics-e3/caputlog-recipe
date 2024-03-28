@@ -10,6 +10,7 @@ source:
   - path: ../src
   - patches:
     - patch/fix_json_memory_leak.p0.patch
+    - patch/0001-Add-metadata-information-to-json-output.p0.patch
 
 build:
   number: 4
