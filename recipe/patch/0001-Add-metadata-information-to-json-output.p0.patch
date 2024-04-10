@@ -6,7 +6,7 @@ Subject: [PATCH] Add metadata information to json output
 The iocLogPrefix solution creates string that is a mixed between plain
 text and json. That is harder to parse and search than just having only
 json.
-This patch adds the caPutJsonLogMetadata command that adds metadata
+This patch adds the caPutJsonLogAddMetadata command that adds metadata
 to logs so we drop the usage of iocLogPrefix
 ---
  caPutLogApp/caPutJsonLogShellCommands.cpp | 22 +++++++++++++++++
@@ -38,15 +38,15 @@ index 1f271e0..64e4da0 100644
 +        if (logger != NULL) return logger->addMetadata(property_str, value_str);
 +        else return -1;
 +    }
-+    static const iocshArg caPutJsonLogMetadataArg0 = {"property", iocshArgString};
-+    static const iocshArg caPutJsonLogMetadataArg1 = {"value", iocshArgString};
-+    static const iocshArg *const caPutJsonLogMetadataArgs[] =
++    static const iocshArg caPutJsonLogAddMetadataArg0 = {"property", iocshArgString};
++    static const iocshArg caPutJsonLogAddMetadataArg1 = {"value", iocshArgString};
++    static const iocshArg *const caPutJsonLogAddMetadataArgs[] =
 +    {
-+        &caPutJsonLogMetadataArg0,
-+        &caPutJsonLogMetadataArg1
++        &caPutJsonLogAddMetadataArg0,
++        &caPutJsonLogAddMetadataArg1
 +    };
-+    static const iocshFuncDef caPutJsonLogMetadataDef = {"caPutJsonLogMetadata", 2, caPutJsonLogMetadataArgs};
-+    static void caPutJsonLogMetadataCall(const iocshArgBuf *args)
++    static const iocshFuncDef caPutJsonLogAddMetadataDef = {"caPutJsonLogAddMetadata", 2, caPutJsonLogAddMetadataArgs};
++    static void caPutJsonLogAddMetadataCall(const iocshArgBuf *args)
 +    {
 +        caPutJsonLogAddMetadata(args[0].sval, args[1].sval);
 +    }
@@ -57,7 +57,7 @@ index 1f271e0..64e4da0 100644
          iocshRegister(&caPutjsonLogInitDef,caPutJsonLogInitCall);
          iocshRegister(&caPutJsonLogReconfDef,caPutJsonLogReconfCall);
          iocshRegister(&caPutJsonLogShowDef,caPutJsonLogShowCall);
-+        iocshRegister(&caPutJsonLogMetadataDef,caPutJsonLogMetadataCall);
++        iocshRegister(&caPutJsonLogAddMetadataDef,caPutJsonLogAddMetadataCall);
      }
      epicsExportRegistrar(caPutJsonLogRegister);
  
