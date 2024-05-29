@@ -14,5 +14,6 @@
 #- ####################################################
 
 #- require has afterInit function
-afterInit("caPutJsonLogInit $(CAPUTLOG_INET):$(CAPUTLOG_INET_PORT=7004) $(CAPUTLOG_OPTION=0)")
+afterInit("caPutJsonLogInit $(CAPUTLOG_INET):$(CAPUTLOG_INET_PORT=8002) $(CAPUTLOG_OPTION=0)")
+afterInit("caPutJsonLogAddMetadata iocName $(IOCNAME)")
 # ...

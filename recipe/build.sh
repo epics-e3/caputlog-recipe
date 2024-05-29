@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# LIBVERSION shall only include MAJOR.MINOR.PATCH for require
-LIBVERSION=$(echo ${PKG_VERSION}| cut -d'.' -f1-3)
+LIBVERSION=${PKG_VERSION}
 
 # Clean between variants builds
 make clean

@@ -1,4 +1,4 @@
-{% set version = "4.0.0" %}
+{% set version = "4.0.0.rc1" %}
 
 package:
   name: caputlog
@@ -10,8 +10,11 @@ source:
   - path: ../src
   - patches:
     - patch/fix_json_memory_leak.p0.patch
+    - patch/0001-Add-metadata-information-to-json-output.p0.patch
+    - patch/0002-Fix-pvmonitors-for-waveforms.p0.patch
 
 build:
+  skip: True  # [ppc64]
   number: 3
   run_exports:
     - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
@@ -20,7 +23,6 @@ requirements:
   build:
     - make
     - perl
-    - tclx
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:

@@ -2,6 +2,8 @@
 where_am_I := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(E3_REQUIRE_TOOLS)/driver.makefile
 
+USR_CPPFLAGS += -DJSON_AND_ARRAYS_SUPPORTED
+
 APP:=caPutLogApp
 APPSRC:=$(APP)
 
@@ -20,7 +22,6 @@ SOURCES += $(APPSRC)/caPutLogShellCommands.c
 SOURCES += $(APPSRC)/caPutJsonLogTask.cpp
 SOURCES += $(APPSRC)/caPutJsonLogShellCommands.cpp
 
-DBDS += $(APPSRC)/caPutLog.dbd
 DBDS += $(APPSRC)/caPutJsonLog.dbd
 
 SCRIPTS += ./iocsh/caPutLog.iocsh
