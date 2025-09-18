@@ -1,5 +1,4 @@
 ## The following lines are mandatory, please don't change them.
-where_am_I := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(E3_REQUIRE_TOOLS)/driver.makefile
 
 USR_CPPFLAGS += -DJSON_AND_ARRAYS_SUPPORTED
@@ -26,6 +25,3 @@ DBDS += $(APPSRC)/caPutJsonLog.dbd
 
 SCRIPTS += ./iocsh/caPutLog.iocsh
 
-.PHONY: 
-.PHONY: vlibs
-vlibs:

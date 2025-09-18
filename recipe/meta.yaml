@@ -8,23 +8,19 @@ source:
   - url: https://github.com/epics-modules/caPutLog/archive/refs/tags/R4.1.tar.gz
     sha256: 67ee2374132c8423cb7d2e238b5353229d12de2ce331445a912bed4b27611ce9 
   - path: ../src
-  - patches:
-    - patch/fix_json_memory_leak.p0.patch
-    - patch/0001-Add-metadata-information-to-json-output.p0.patch
-    - patch/0002-Fix-pvmonitors-for-waveforms.p0.patch
 
 build:
-  skip: True  # [ppc64]
   number: 0
   run_exports:
     - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
 
 requirements:
   build:
-    - make
-    - perl
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ stdlib('c') }}
+    - make
+    - perl
   host:
     - epics-base
     - require
