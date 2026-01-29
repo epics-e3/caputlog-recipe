@@ -1,5 +1,4 @@
 ---
 include:
   - project: 'ics-infrastructure/gitlab-ci-yml'
-    ref: e3-conda-build
     file: 'E3CondaBuild.gitlab-ci.yml'
