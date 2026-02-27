@@ -26,10 +26,16 @@ requirements:
     - require
 
 test:
+  source_files:
+    - ./test
   requires:
     - run-iocsh
+    - pytest
+    - p4p
+    - pyepics
   commands:
     - run-iocsh -r caputlog
+    - pytest -v
 
 about:
   home: https://github.com/epics-modules/caPutLog
