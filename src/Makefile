@@ -24,4 +24,3 @@ SOURCES += $(APPSRC)/caPutJsonLogShellCommands.cpp
 DBDS += $(APPSRC)/caPutJsonLog.dbd
 
 SCRIPTS += ./iocsh/caPutLog.iocsh
-
