@@ -39,4 +39,4 @@ test:
 
 about:
   home: https://github.com/epics-modules/caPutLog
-  summary: "Channel Access Put Logger, from DESY/BESSY"
+  summary: "EPICS support module that provides logging for Channel Access and PV Access put operations"
