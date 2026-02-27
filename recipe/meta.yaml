@@ -39,5 +39,4 @@ test:
 
 about:
   home: https://github.com/epics-modules/caPutLog
-  license: EPICS Open License
   summary: "Channel Access Put Logger, from DESY/BESSY"
