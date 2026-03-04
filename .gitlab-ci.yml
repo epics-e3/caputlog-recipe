@@ -2,3 +2,5 @@
 include:
   - project: 'ics-infrastructure/gitlab-ci-yml'
     file: 'E3CondaBuild.gitlab-ci.yml'
+  - project: "ics-infrastructure/gitlab-ci-yml"
+    file: "PreCommit.gitlab-ci.yml"

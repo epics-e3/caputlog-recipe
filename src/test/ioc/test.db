@@ -1,0 +1,14 @@
+record(ai, "TEST:ai") {
+    field(VAL,  "1")
+}
+
+record(ai, "TEST:ai2") {
+    field(VAL,  "1")
+}
+
+record(waveform, "TEST:wf") {
+    field(NELM, "10")
+    field(FTVL, "DOUBLE")
+    field(INP,  "[1,2,3]")
+    field(PINI, "YES")
+}

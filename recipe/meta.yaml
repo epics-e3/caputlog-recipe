@@ -1,18 +1,19 @@
-{% set version = "4.1.0" %}
+{% set name = "caPutLog" %}
+{% set version = "4.1" %}
 
 package:
-  name: caputlog
+  name: "{{ name|lower }}"
   version: "{{ version }}"
 
 source:
-  - url: https://github.com/epics-modules/caPutLog/archive/refs/tags/R4.1.tar.gz
-    sha256: 67ee2374132c8423cb7d2e238b5353229d12de2ce331445a912bed4b27611ce9 
+  - url: https://github.com/epics-modules/{{ name }}/archive/refs/tags/R{{ version }}.tar.gz
+    sha256: 67ee2374132c8423cb7d2e238b5353229d12de2ce331445a912bed4b27611ce9
   - path: ../src
 
 build:
-  number: 2
+  number: 3
   run_exports:
-    - {{ pin_subpackage('caputlog', max_pin='x.x.x.x') }}
+    - {{ pin_subpackage(name|lower, max_pin='x.x') }}
 
 requirements:
   build:
@@ -26,12 +27,17 @@ requirements:
     - require
 
 test:
+  source_files:
+    - ./test
   requires:
     - run-iocsh
+    - pytest
+    - p4p
+    - pyepics
   commands:
-    - run-iocsh -r caputlog
+    - run-iocsh -r {{ name|lower }}
+    - pytest -v
 
 about:
   home: https://github.com/epics-modules/caPutLog
-  license: EPICS Open License
-  summary: "Channel Access Put Logger, from DESY/BESSY"
+  summary: "EPICS support module that provides logging for Channel Access and PV Access put operations"
