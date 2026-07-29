@@ -15,12 +15,12 @@ class TestPutLog:
     def test_can_connect(self, log_server, ioc):
         ioc.exit()
 
-        assert "connected to log server" in ioc.outs + ioc.errs
+        assert "connected to log server" in ioc.output
 
     def test_has_all_macros(self, log_server, ioc):
         ioc.exit()
 
-        assert not re.search(r"macLib: macro \S+ is undefined", ioc.outs + ioc.errs)
+        assert not re.search(r"macLib: macro \S+ is undefined", ioc.output)
 
     def test_caput_triggers_log_message(self, log_server, ioc):
         import epics

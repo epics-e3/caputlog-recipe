@@ -44,17 +44,15 @@ class LogServer(socketserver.TCPServer):
 
 @pytest.fixture
 def ioc():
-    ioc_proc = IOC(
+    with IOC.ready(
         (DATA_DIR / "ioc" / "st.cmd").as_posix(),
         "--iocname",
         "TEST:CAPUTLOG",
-    )
-    with ioc_proc:
-        time.sleep(1.5)
+    ) as ioc_proc:
         yield ioc_proc
     # Dump logs on test failure
-    LOG.error("IOC stdout:\n%s", ioc_proc.outs)
-    LOG.error("IOC stderr:\n%s", ioc_proc.errs)
+    LOG.error("IOC stdout:\n%s", ioc_proc.stdout)
+    LOG.error("IOC stderr:\n%s", ioc_proc.stderr)
 
 
 @pytest.fixture(scope="session")
